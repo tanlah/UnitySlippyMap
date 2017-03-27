@@ -37,6 +37,8 @@ namespace UnitySlippyMap.Layers
 	{
 	#region Protected members & properties
 
+		public string Shader = "Larku/UnlitTransparent";
+
 		/// <summary>
 		/// The tile cache size limit.
 		/// </summary>
@@ -109,13 +111,6 @@ namespace UnitySlippyMap.Layers
 		/// </summary>
 		protected void Awake ()
 		{
-			// create the tile template if needed
-			if (tileTemplate == null) {
-				tileTemplate = TileBehaviour.CreateTileTemplate ();
-				tileTemplate.hideFlags = HideFlags.HideAndDontSave;
-				tileTemplate.renderer.enabled = false;
-			}
-			++tileTemplateUseCount;
 		}
 
 		/// <summary>
@@ -123,6 +118,14 @@ namespace UnitySlippyMap.Layers
 		/// </summary>
 		private void Start ()
 		{		
+			// create the tile template if needed
+			if (tileTemplate == null) {
+				Debug.Log ("Shader is " + Shader);
+				tileTemplate = TileBehaviour.CreateTileTemplate (Shader);
+				tileTemplate.hideFlags = HideFlags.HideAndDontSave;
+				tileTemplate.GetComponent<Renderer>().enabled = false;
+			}
+			++tileTemplateUseCount;
 			if (tileTemplate.transform.localScale.x != Map.RoundedHalfMapScale)
 				tileTemplate.transform.localScale = new Vector3 (Map.RoundedHalfMapScale, 1.0f, Map.RoundedHalfMapScale);
 		}
@@ -209,7 +212,7 @@ namespace UnitySlippyMap.Layers
 			if (!tiles.ContainsKey (key))
 				return true; // the tile is out of the frustum
 			TileBehaviour tile = tiles [key];
-			Renderer r = tile.renderer;
+			Renderer r = tile.GetComponent<Renderer>();
 			return r.enabled && r.material.mainTexture != null && !tile.Showing;
 		}
 
@@ -267,7 +270,7 @@ namespace UnitySlippyMap.Layers
 				int tileY = Int32.Parse (tileAddressTokens [2]);
 
 				int roundedZoomDif = tileRoundedZoom - roundedZoom;
-				bool inFrustum = GeometryUtility.TestPlanesAABB (frustum, tile.collider.bounds);
+				bool inFrustum = GeometryUtility.TestPlanesAABB (frustum, tile.GetComponent<Collider>().bounds);
 
 				if (!inFrustum || roundedZoomDif != 0) {
 					CancelTileRequest (tileX, tileY, tileRoundedZoom);
@@ -283,7 +286,7 @@ namespace UnitySlippyMap.Layers
 			foreach (string tileAddress in tilesToRemove) {
 				TileBehaviour tile = tiles [tileAddress];
 
-				Renderer renderer = tile.renderer;
+				Renderer renderer = tile.GetComponent<Renderer>();
 				if (renderer != null) {
 					GameObject.DestroyImmediate (renderer.material.mainTexture);
 					//TextureAtlasManager.Instance.RemoveTexture(pair.Value.TextureId);
@@ -329,7 +332,7 @@ namespace UnitySlippyMap.Layers
 		void GrowTiles (Plane[] frustum, int tileX, int tileY, int tileCountOnX, int tileCountOnY, float offsetX, float offsetZ)
 		{
 			tileTemplate.transform.position = new Vector3 (offsetX, tileTemplate.transform.position.y, offsetZ);
-			if (GeometryUtility.TestPlanesAABB (frustum, tileTemplate.collider.bounds) == true) {
+			if (GeometryUtility.TestPlanesAABB (frustum, tileTemplate.GetComponent<Collider>().bounds) == true) {
 				if (tileX < 0)
 					tileX += tileCountOnX;
 				else if (tileX >= tileCountOnX)
