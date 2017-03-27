@@ -139,9 +139,9 @@ namespace UnitySlippyMap.Map
 		/// <summary>
 		/// Creates a tile template GameObject.
 		/// </summary>
-		public static TileBehaviour CreateTileTemplate ()
+		public static TileBehaviour CreateTileTemplate (string shaderName="Larku/UnlitTransparent")
 		{
-			return CreateTileTemplate ("[Tile Template]", AnchorPoint.MiddleCenter);
+			return CreateTile ("[Tile Template]", AnchorPoint.MiddleCenter, shaderName);
 		}
 
 		/// <summary>
@@ -149,9 +149,9 @@ namespace UnitySlippyMap.Map
 		/// </summary>
 		/// <returns>The tile template.</returns>
 		/// <param name="name">Name.</param>
-		public static TileBehaviour CreateTileTemplate (string name)
+		public static TileBehaviour CreateTileTemplateForName (string name, string shaderName="Larku/UnlitTransparent")
 		{
-			return CreateTileTemplate (name, AnchorPoint.MiddleCenter);
+			return CreateTile (name, AnchorPoint.MiddleCenter, shaderName);
 		}
 
 		/// <summary>
@@ -159,9 +159,9 @@ namespace UnitySlippyMap.Map
 		/// </summary>
 		/// <returns>The tile template.</returns>
 		/// <param name="anchorPoint">Anchor point.</param>
-		public static TileBehaviour CreateTileTemplate (AnchorPoint anchorPoint)
+		public static TileBehaviour CreateTileTemplate (AnchorPoint anchorPoint, string shaderName="Larku/UnlitTransparent")
 		{
-			return CreateTileTemplate ("[Tile Template]", anchorPoint);
+			return CreateTile ("[Tile Template]", anchorPoint, shaderName);
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace UnitySlippyMap.Map
 		/// <returns>The tile template.</returns>
 		/// <param name="tileName">Tile name.</param>
 		/// <param name="anchorPoint">Anchor point.</param>
-		public static TileBehaviour CreateTileTemplate (string tileName, AnchorPoint anchorPoint)
+		public static TileBehaviour CreateTile(string tileName, AnchorPoint anchorPoint, string shaderName="Larku/UnlitTransparent")
 		{
 			GameObject tileTemplate = new GameObject (tileName);
 			TileBehaviour tile = tileTemplate.AddComponent<TileBehaviour> ();
@@ -272,7 +272,7 @@ namespace UnitySlippyMap.Map
 			};
 			
 			// add a material
-			string shaderName = "Larku/UnlitTransparent";
+			Debug.Log("Shader name is " + shaderName);
 			Shader shader = Shader.Find (shaderName);
 			
 #if DEBUG_LOG
@@ -297,6 +297,7 @@ namespace UnitySlippyMap.Map
 			material.mainTexture = texture;
 			material.mainTexture.wrapMode = TextureWrapMode.Clamp;
 			material.mainTexture.filterMode = FilterMode.Trilinear;
+			material.SetVector("_HSVAAdjust", new Vector4(-0.09f, -0.2f, -0.4f, 0));
 			this.GetComponent<Renderer>().enabled = true;
 			this.Show ();
 		}
