@@ -211,7 +211,8 @@ namespace UnitySlippyMap.Layers
 		/// <param name="roundedZoom">Rounded zoom.</param>
 		protected override string GetTileURL (int tileX, int tileY, int roundedZoom)
 		{
-			return String.Format (Path.Combine (BaseURL, URLParametersFormat).Replace ("\\", "/") + TileImageExtension, roundedZoom, tileX, tileY);
+			string urlStr = String.Format (Path.Combine (BaseURL, URLParametersFormat).Replace ("\\", "/") + TileImageExtension, roundedZoom, tileX, tileY);
+			return urlStr;
 		}
 
 	#endregion

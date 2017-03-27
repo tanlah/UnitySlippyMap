@@ -218,6 +218,8 @@ namespace UnitySlippyMap.Layers
 #if DEBUG_LOG
 								Debug.Log ("DEBUG: VirtualEarthTileLayer.Update: ImageUrl: " + (metadata.ResourceSets [0].Resources [0] as UnitySlippyMap.VirtualEarth.ImageryMetadata).ImageUrl);
 #endif
+								Debug.Log ("DEBUG: VirtualEarthTileLayer.Update: ImageUrl: " + (metadata.ResourceSets [0].Resources [0] as UnitySlippyMap.VirtualEarth.ImageryMetadata).ImageUrl);
+
 
 								isReadyToBeQueried = true;
 
