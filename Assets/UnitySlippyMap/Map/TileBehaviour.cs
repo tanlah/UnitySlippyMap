@@ -177,7 +177,8 @@ namespace UnitySlippyMap.Map
 			MeshFilter meshFilter = tileTemplate.AddComponent<MeshFilter> ();
 			MeshRenderer meshRenderer = tileTemplate.AddComponent<MeshRenderer> ();
 			BoxCollider boxCollider = tileTemplate.AddComponent<BoxCollider> ();
-			
+			// set the y to -0.01f so elements above it trigger raycast hits.
+			tileTemplate.transform.position -= new Vector3 (0, 0.01f, 0);
 			// add the geometry
 			Mesh mesh = meshFilter.mesh;
 			switch (anchorPoint) {
